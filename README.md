@@ -41,16 +41,12 @@ Este proyecto implementa un sistema CRUD (Crear, Leer, Actualizar, Eliminar) par
 
 ### **Despliegue en la Nube (AWS EC2)**
 
-Esta sección es crucial para los revisores.
-
 El proyecto ha sido desplegado exitosamente en una instancia de Amazon EC2, utilizando Docker y Docker Compose para gestionar los servicios del frontend, backend y la conexión a una base de datos PostgreSQL en AWS RDS.
 
 **URL de la Aplicación Desplegada:**
 Puedes acceder a la aplicación en vivo a través de la siguiente URL:
 
 ➡️ [**http:3.21.247.78**](http://3.21.247.78) ⬅️
-
-_(Reemplaza `TU_DIRECCION_IPV4_PUBLICA_EC2` con la IP pública de tu instancia EC2, por ejemplo: `http://3.21.247.78`)_
 
 **Detalles del Despliegue:**
 
