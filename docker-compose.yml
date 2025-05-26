@@ -6,57 +6,41 @@ services:
     ports:
       - "5000:5000"
     environment:
-      # These should ideally come from environment variables or a .env file for security
-      # For now, keeping them hardcoded as you had them, but be aware for production!
       DB_HOST: crud-db.cpmyy02y07q0.us-east-2.rds.amazonaws.com
       DB_NAME: crud
       DB_USER: postgres
       DB_PASS: lK7xWD7fE2Ewuge
     volumes:
-      - ./backend:/app # Mount the backend code for easier development (optional for production)
+      - ./backend:/app
     depends_on:
-      # This ensures backend starts after the database is theoretically ready
-      # For RDS, this mainly ensures the Docker container for backend is spun up.
-      # Actual DB connection readiness is managed by psycopg2 retries.
       - db
-    restart: always # Always restart if the container stops
+    restart: always
 
   frontend:
     build: ./frontend
     ports:
       - "80:80"
     environment:
-      # This variable will be picked up by Vite during the build process
-      VITE_API_URL: http://backend:5000 # 'backend' is the service name in docker-compose
+      VITE_API_URL: http://backend:5000
     depends_on:
-      - backend # Frontend depends on backend being available
+      - backend
     restart: always
 
-  # This service is a placeholder for your RDS database.
-  # In a real Docker Compose setup where you manage the DB, it would be a PostgreSQL image.
-  # Since you're using RDS, this service won't actually run a DB container.
-  # It's here mainly to show the dependency and allow `docker-compose up` to understand it.
   db:
-    image: postgres:13-alpine # Use an appropriate PostgreSQL image
+    image: postgres:13-alpine
     environment:
-      # These environment variables are only for a locally run PostgreSQL container,
-      # they are not directly used by your Flask app when connecting to RDS.
       POSTGRES_DB: crud
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: lK7xWD7fE2Ewuge
-    # Remove ports if you don't need to access this local DB from outside Docker
-    # ports:
-    #   - "5432:5432"
+
     volumes:
-      - db_data:/var/lib/postgresql/data # Persist database data locally
-    # If you are exclusively using RDS, you can comment out or remove the 'db' service
-    # entirely and just manage the backend's DB_HOST directly. However, having it
-    # as a conceptual dependency can sometimes be useful.
-    healthcheck: # Basic health check for the DB
+      - db_data:/var/lib/postgresql/data
+
+    healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d crud"]
       interval: 5s
       timeout: 5s
       retries: 5
 
 volumes:
-  db_data: # Define a named volume for persistent database data
+  db_data:
