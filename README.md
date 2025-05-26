@@ -9,7 +9,7 @@ Este proyecto implementa un sistema CRUD (Crear, Leer, Actualizar, Eliminar) par
 - Buscar usuarios por nombre o correo electrónico.
 - Actualizar información de usuarios.
 - Eliminar usuarios.
-- **Truncar nombres de usuario si exceden los 10 caracteres, mostrando "..."** (¡Esta es la característica que acabas de implementar!)
+- **Truncar nombres de usuario si exceden los 10 caracteres, mostrando "..."**
 - Mostrar el total de usuarios registrados.
 
 ## Tecnologías Utilizadas
