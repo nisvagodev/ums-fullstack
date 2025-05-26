@@ -11,16 +11,18 @@ export const useUserManagement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Define your backend API URL. This will change when deployed to EC2.
-  // For local development, it would be 'http://localhost:5000'
-  // When deployed, it will be the public IP or domain of your EC2 instance.
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  // NO USES API_URL directamente en las llamadas fetch si Nginx proxya
+  // La variable de entorno VITE_API_URL es para el proceso de build de Vite,
+  // y la usas para referenciar el backend como "backend" dentro de la red Docker.
+  // Pero una vez compilado, el frontend debe hacer llamadas relativas a Nginx.
+  // const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; // Comenta o elimina esta línea
 
   // Fetch users on component mount
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${API_URL}/users`);
+        // CAMBIO CRUCIAL: Utiliza la ruta relativa /api/users
+        const response = await fetch(`/api/users`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -34,11 +36,12 @@ export const useUserManagement = () => {
       }
     };
     fetchUsers();
-  }, [API_URL]);
+  }, []); // El array de dependencias ahora está vacío porque no dependemos de API_URL
 
   const addUser = async (user) => {
     try {
-      const response = await fetch(`${API_URL}/users`, {
+      // CAMBIO CRUCIAL: Utiliza la ruta relativa /api/users
+      const response = await fetch(`/api/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +66,8 @@ export const useUserManagement = () => {
 
   const updateUser = async (updatedUser) => {
     try {
-      const response = await fetch(`${API_URL}/users/${updatedUser.id}`, {
+      // CAMBIO CRUCIAL: Utiliza la ruta relativa /api/users/{id}
+      const response = await fetch(`/api/users/${updatedUser.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -89,7 +93,8 @@ export const useUserManagement = () => {
 
   const deleteUser = async (id) => {
     try {
-      const response = await fetch(`${API_URL}/users/${id}`, {
+      // CAMBIO CRUCIAL: Utiliza la ruta relativa /api/users/{id}
+      const response = await fetch(`/api/users/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
