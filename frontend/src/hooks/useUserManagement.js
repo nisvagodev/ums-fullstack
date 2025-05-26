@@ -11,17 +11,9 @@ export const useUserManagement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // NO USES API_URL directamente en las llamadas fetch si Nginx proxya
-  // La variable de entorno VITE_API_URL es para el proceso de build de Vite,
-  // y la usas para referenciar el backend como "backend" dentro de la red Docker.
-  // Pero una vez compilado, el frontend debe hacer llamadas relativas a Nginx.
-  // const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; // Comenta o elimina esta línea
-
-  // Fetch users on component mount
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        // CAMBIO CRUCIAL: Utiliza la ruta relativa /api/users
         const response = await fetch(`/api/users`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -36,11 +28,9 @@ export const useUserManagement = () => {
       }
     };
     fetchUsers();
-  }, []); // El array de dependencias ahora está vacío porque no dependemos de API_URL
-
+  }, []);
   const addUser = async (user) => {
     try {
-      // CAMBIO CRUCIAL: Utiliza la ruta relativa /api/users
       const response = await fetch(`/api/users`, {
         method: "POST",
         headers: {
@@ -60,13 +50,12 @@ export const useUserManagement = () => {
     } catch (err) {
       setError("Error al agregar usuario: " + err.message);
       console.error("Error adding user:", err);
-      throw err; // Re-throw to allow component to handle
+      throw err;
     }
   };
 
   const updateUser = async (updatedUser) => {
     try {
-      // CAMBIO CRUCIAL: Utiliza la ruta relativa /api/users/{id}
       const response = await fetch(`/api/users/${updatedUser.id}`, {
         method: "PUT",
         headers: {
@@ -93,7 +82,6 @@ export const useUserManagement = () => {
 
   const deleteUser = async (id) => {
     try {
-      // CAMBIO CRUCIAL: Utiliza la ruta relativa /api/users/{id}
       const response = await fetch(`/api/users/${id}`, {
         method: "DELETE",
       });
