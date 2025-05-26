@@ -5,6 +5,13 @@ const UserTable = ({ users, onEdit, onDelete }) => {
     return <p className="no-users">No hay usuarios registrados</p>;
   }
 
+  const truncateName = (name) => {
+    if (name.length > 10) {
+      return name.substring(0, 10) + "...";
+    }
+    return name;
+  };
+
   return (
     <table className="user-table">
       <thead>
@@ -18,8 +25,7 @@ const UserTable = ({ users, onEdit, onDelete }) => {
       <tbody>
         {users.map((user) => (
           <tr key={user.id}>
-            <td>{user.name}</td>
-            <td>{user.age}</td>
+            <td>{truncateName(user.name)}</td> <td>{user.age}</td>
             <td>{user.email}</td>
             <td className="actions">
               <button
